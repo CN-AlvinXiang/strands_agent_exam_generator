@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Exam Generator - Test Frontend</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:disabled {
+            background-color: #cccccc;
+        }
+        .status {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .loading {
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+        }
+        .success {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+        }
+        .error {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #e9ecef;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+        }
+        .hidden {
+            display: none;
+        }
+        #examFrame {
+            width: 100%;
+            height: 500px;
+            border: 1px solid #dee2e6;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>AI Exam Generator - Test Frontend</h1>
+    
+    <div class="form-container">
+        <h2>Generate Exam</h2>
+        
+        <div class="form-group">
+            <label for="apiEndpoint">API Endpoint:</label>
+            <input type="text" id="apiEndpoint" value="http://34.237.137.110:5001/workflows/run">
+        </div>
+        
+        <div class="form-group">
+            <label for="grade">Grade:</label>
+            <input type="text" id="grade" value="5th">
+        </div>
+        
+        <div class="form-group">
+            <label for="subject">Subject:</label>
+            <input type="text" id="subject" value="Mathematics">
+        </div>
+        
+        <div class="form-group">
+            <label for="questionTypes">Question Types:</label>
+            <select id="questionTypes">
+                <option value="singleChoice">Single Choice</option>
+                <option value="multipleChoice">Multiple Choice</option>
+                <option value="fillInBlank">Fill in the Blank</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="numberOfQuestions">Number of Questions:</label>
+            <input type="number" id="numberOfQuestions" value="3" min="1" max="10">
+        </div>
+        
+        <div class="form-group">
+            <label for="difficulty">Difficulty:</label>
+            <select id="difficulty">
+                <option value="easy">Easy</option>
+                <option value="medium" selected>Medium</option>
+                <option value="hard">Hard</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="topics">Topics:</label>
+            <input type="text" id="topics" value="Basic Algebra">
+        </div>
+        
+        <div class="form-group">
+            <label for="teacherNotes">Teacher Notes:</label>
+            <textarea id="teacherNotes" rows="3">Test request</textarea>
+        </div>
+        
+        <button id="generateButton">Generate Exam</button>
+    </div>
+    
+    <div id="statusContainer" class="status hidden"></div>
+    
+    <div id="resultContainer" class="result hidden">
+        <h3>Result</h3>
+        <div id="resultContent"></div>
+        <div id="examLinkContainer" class="hidden">
+            <h4>Exam Link:</h4>
+            <p id="examLink"></p>
+            <button id="openExamButton">Open Exam</button>
+        </div>
+    </div>
+    
+    <div id="examContainer" class="hidden">
+        <h3>Exam Preview</h3>
+        <iframe id="examFrame" title="Exam Preview"></iframe>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const generateButton = document.getElementById('generateButton');
+            const statusContainer = document.getElementById('statusContainer');
+            const resultContainer = document.getElementById('resultContainer');
+            const resultContent = document.getElementById('resultContent');
+            const examLinkContainer = document.getElementById('examLinkContainer');
+            const examLinkElement = document.getElementById('examLink');
+            const openExamButton = document.getElementById('openExamButton');
+            const examContainer = document.getElementById('examContainer');
+            const examFrame = document.getElementById('examFrame');
+            
+            generateButton.addEventListener('click', generateExam);
+            openExamButton.addEventListener('click', openExam);
+            
+            function generateExam() {
+                // Get form values
+                const apiEndpoint = document.getElementById('apiEndpoint').value;
+                const grade = document.getElementById('grade').value;
+                const subject = document.getElementById('subject').value;
+                const questionTypes = document.getElementById('questionTypes').value;
+                const numberOfQuestions = document.getElementById('numberOfQuestions').value;
+                const difficulty = document.getElementById('difficulty').value;
+                const topics = document.getElementById('topics').value;
+                const teacherNotes = document.getElementById('teacherNotes').value;
+                
+                // Prepare request body
+                const requestBody = {
+                    inputs: {
+                        grade: grade,
+                        subject: subject,
+                        types: questionTypes,
+                        count: numberOfQuestions,
+                        difficulty: difficulty,
+                        topics: topics,
+                        teacher_notes: teacherNotes
+                    },
+                    response_mode: "streaming",
+                    user: "test-user"
+                };
+                
+                // Update UI
+                generateButton.disabled = true;
+                statusContainer.className = 'status loading';
+                statusContainer.textContent = 'Generating exam...';
+                statusContainer.classList.remove('hidden');
+                resultContainer.classList.add('hidden');
+                examContainer.classList.add('hidden');
+                
+                // Send request
+                fetch(apiEndpoint, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(requestBody)
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('Success:', data);
+                    
+                    // Update UI
+                    statusContainer.className = 'status success';
+                    statusContainer.textContent = 'Exam generated successfully!';
+                    resultContainer.classList.remove('hidden');
+                    
+                    // Display raw response
+                    resultContent.innerHTML = '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
+                    
+                    // Extract exam link if available
+                    if (data.event === 'workflow_finished' && 
+                        data.data && 
+                        data.data.outputs && 
+                        data.data.outputs.body) {
+                        try {
+                            const bodyData = JSON.parse(data.data.outputs.body);
+                            if (bodyData.message) {
+                                const linkMatch = bodyData.message.match(/http:\/\/.*$/);
+                                if (linkMatch) {
+                                    const examLink = linkMatch[0];
+                                    examLinkElement.textContent = examLink;
+                                    examLinkElement.href = examLink;
+                                    examLinkContainer.classList.remove('hidden');
+                                }
+                            }
+                        } catch (e) {
+                            console.error('Error parsing body data:', e);
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    statusContainer.className = 'status error';
+                    statusContainer.textContent = `Error: ${error.message}`;
+                })
+                .finally(() => {
+                    generateButton.disabled = false;
+                });
+            }
+            
+            function openExam() {
+                const examLink = examLinkElement.textContent;
+                if (examLink) {
+                    examFrame.src = examLink;
+                    examContainer.classList.remove('hidden');
+                }
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+workflow_id,workflow_name,tool_name,total_calls,successful_calls,failed_calls,success_rate,average_execution_time,status
+32013399-d744-4775-8d50-7fa46d3d711c,考试生成,extract_exam_metadata,1,1,0,1.0,4.868112,completed
+32013399-d744-4775-8d50-7fa46d3d711c,考试生成,generate_fill_blank_question,1,1,0,1.0,3.708187,completed
+32013399-d744-4775-8d50-7fa46d3d711c,考试生成,generate_multiple_choice_question,3,3,0,1.0,3.47331866666667,completed
+32013399-d744-4775-8d50-7fa46d3d711c,考试生成,generate_single_choice_question,3,3,0,1.0,3.528803,completed
+32013399-d744-4775-8d50-7fa46d3d711c,考试生成,plan_exam_content,1,1,0,1.0,4.543524,completed
+32013399-d744-4775-8d50-7fa46d3d711c,考试生成,validate_exam_format,1,1,0,1.0,18.619223,completed
+06def76c-719a-4ebd-b7b9-24973e8af0ea,考试生成,extract_exam_metadata,2,2,0,1.0,5.994742,completed
+06def76c-719a-4ebd-b7b9-24973e8af0ea,考试生成,generate_fill_blank_question,1,1,0,1.0,6.359602,completed
+06def76c-719a-4ebd-b7b9-24973e8af0ea,考试生成,generate_multiple_choice_question,2,2,0,1.0,8.083026,completed
+06def76c-719a-4ebd-b7b9-24973e8af0ea,考试生成,generate_single_choice_question,3,3,0,1.0,6.57154866666667,completed
+06def76c-719a-4ebd-b7b9-24973e8af0ea,考试生成,plan_exam_content,1,1,0,1.0,4.724832,completed
+06def76c-719a-4ebd-b7b9-24973e8af0ea,考试生成,validate_exam_format,1,1,0,1.0,16.330452,completed

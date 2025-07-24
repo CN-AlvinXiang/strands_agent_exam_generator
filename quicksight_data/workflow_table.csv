@@ -1,0 +1,4 @@
+workflow_id,workflow_name,status,execution_time,average_tool_execution_time,total_steps,completed_steps,failed_steps,step_completion_rate,total_tool_calls,successful_tool_calls,failed_tool_calls,tool_call_success_rate,timestamp
+32013399-d744-4775-8d50-7fa46d3d711c,考试生成,completed,57.709012,5.2745411,1,1,0,1,10,10,0,1,2025-07-21 18:51:57
+f49f46ac-490a-42a8-915b-c65275fe961c,考试生成,failed,3.84583,0,1,0,1,0,0,0,0,0,2025-07-21 18:51:57
+06def76c-719a-4ebd-b7b9-24973e8af0ea,考试生成,completed,81.031083,7.5285068,1,1,0,1,10,10,0,1,2025-07-21 18:51:57

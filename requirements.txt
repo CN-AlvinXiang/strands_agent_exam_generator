@@ -1,0 +1,15 @@
+boto3>=1.28.0
+botocore>=1.31.0
+awscli
+opensearch-py
+requests-aws4auth
+pyyaml
+retrying
+pandas
+strands-agents
+strands-agents-tools
+flask>=2.0.0
+flask-cors>=3.0.0
+requests>=2.25.0
+beautifulsoup4>=4.9.0
+python-dateutil>=2.8.0

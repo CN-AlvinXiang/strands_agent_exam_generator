@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <meta charset="utf-8">
+    <style>
+        body {
+            font-family: sans-serif;
+        }
+        code, pre {
+            font-family: monospace;
+        }
+        h1 code,
+        h2 code,
+        h3 code,
+        h4 code,
+        h5 code,
+        h6 code {
+            font-size: inherit;
+        }
+        ul li {
+            list-style-type: none;
+        }
+        table {
+        @extend .table;
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+            integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+            crossorigin="anonymous"></script>
+</head>
+<body>
+<div class="container">
+    <div class="form-row">
+        <div class="container">
+            <p>{"markdown": {"role": "assistant", "content": [{"text": "\u9a8c\u8bc1\u4ecd\u7136\u5931\u8d25\uff0c\u8ba9\u6211\u7ee7\u7eed\u68c0\u67e5\u683c\u5f0f\u95ee\u9898\u3002\u53ef\u80fd\u662fMarkdown\u683c\u5f0f\u6216\u7b54\u6848\u6807\u8bb0\u65b9\u9762\u7684\u95ee\u9898\u3002\u6211\u5c06\u91cd\u65b0\u521b\u5efa\u8003\u8bd5\u5185\u5bb9\uff0c\u786e\u4fdd\u4e25\u683c\u6309\u7167\u8981\u6c42\u7684\u683c\u5f0f\uff1a\n\n# \u4e94\u5e74\u7ea7\u6570\u5b66\u8003\u8bd5 - \u57fa\u7840\u8ba1\u7b97\n\n## \u5355\u9009\u9898\n\n\u8ba1\u7b97 2/3 + 1/6 \u7684\u7ed3\u679c\u662f\uff1a\n\n- (x) 5/6\n- ( ) 3/9\n- ( ) 3/6\n- ( ) 1/2\n\n## \u5355\u9009\u9898\n\n\u4e00\u4e2a\u957f\u65b9\u5f62\u7684\u957f\u662f8\u5398\u7c73\uff0c\u5bbd\u662f6\u5398\u7c73\uff0c\u5b83\u7684\u9762\u79ef\u662f\uff1a\n\n- ( ) 24\u5398\u7c73\n- (x) 48\u5e73\u65b9\u5398\u7c73\n- ( ) 14\u5e73\u65b9\u5398\u7c73\n- ( ) 28\u5398\u7c73\n\n## \u591a\u9009\u9898\n\n\u5173\u4e8e\u5206\u6570\u4e58\u6cd5\u8ba1\u7b97\uff0c\u4ee5\u4e0b\u8bf4\u6cd5\u6b63\u786e\u7684\u662f\uff1a\n\n- [x] \u5206\u6570\u4e58\u6cd5\u53ef\u4ee5\u76f4\u63a5\u5206\u5b50\u4e58\u5206\u5b50\uff0c\u5206\u6bcd\u4e58\u5206\u6bcd\n- [ ] \u8ba1\u7b97\u5206\u6570\u4e58\u6cd5\u524d\u5fc5\u987b\u5148\u901a\u5206\n- [x] \u8ba1\u7b97 1/2 \u00d7 4/5 \u7684\u7ed3\u679c\u662f 2/5\n- [x] \u5e26\u5206\u6570\u76f8\u4e58\u9700\u8981\u5148\u8f6c\u6362\u6210\u5047\u5206\u6570\n- [x] \u5206\u6570\u4e0e\u6574\u6570\u76f8\u4e58\uff0c\u53ef\u4ee5\u76f4\u63a5\u7528\u5206\u5b50\u4e58\u4ee5\u6574\u6570\uff0c\u5206\u6bcd\u4e0d\u53d8"}]}}</p>
+        </div>
+    </div>
+    <div id="tg-msg" class="alert" role="alert" style="display: none">
+        <span id="tg-correct-questions"></span> Correct! <br /><b>Rating: <span id="tg-score"></span>%</b>
+    </div>
+    <div class="row">
+        <button id="check-questions" class="btn btn-lg btn-success">Check</button>
+        <button id="reset-questions" class="btn btn-link">Reset All</button>
+    </div>
+    <script type="text/javascript">$(function(){
+    $('ul.radio-list,ul.checklist,ul.textbox').each(function(i, el){
+        var questionClass = $(this).attr('class');
+        $(this).parent().addClass('question-row').addClass(questionClass);
+        if (questionClass=='radio-list') {
+            $(this).find('input[type="radio"]').attr('name', 'radio-question-' + i);
+        }
+    });
+
+    function checkQuestion() {
+        resetQuestions(true);
+        var questions = $('li.question-row');
+        var total_questions = questions.length;
+        var correct = 0;
+
+        questions.each(function(i, el) {
+            var self = $(this);
+            // Single Question.
+            if (self.hasClass('radio-list')) {
+                if (self.find('input[type="radio"][data-content="1"]:checked').length == 1) {
+                    correct += 1;
+                } else {
+                    self.addClass('text-danger');
+                }
+            }
+            // Textbox Question.
+            if(self.hasClass('textbox')) {
+                var textbox = self.find('input[type="text"]');
+                var correct_text = String(textbox.data("content")).trim().split("").reverse().join("");
+                if(String(textbox.val()).trim().toLowerCase()==correct_text.toLowerCase()) {
+                    correct += 1;
+                } else {
+                    self.addClass('text-danger');
+                    textbox.parent().find("i.text-correct").html(correct_text);
+                }
+            }
+            // Multiple selection Questions.
+            if(self.hasClass('checklist')) {
+                var total_corrects = self.find('input[type="checkbox"][data-content="1"]').length;
+                var total_incorrects = self.find('input[type="checkbox"][data-content="0"]').length;
+                var correct_selected = self.find('input[type="checkbox"][data-content="1"]:checked').length;
+                var incorrect_selected = self.find('input[type="checkbox"][data-content="0"]:checked').length;
+                var qc = +((correct_selected / total_corrects) - (incorrect_selected/total_incorrects)).toFixed(2);
+                if (qc < 0) {
+                    qc = 0;
+                }
+                correct += qc;
+                if (qc == 0) {
+                    self.addClass('text-danger');
+                } else if (qc > 0 && qc < 1) {
+                    self.addClass('text-warning');
+                }
+            }
+        });
+
+        showScore(correct, total_questions);
+    }
+
+    function showScore(correct, total) {
+        var score = (correct / total).toFixed(2) * 100;
+        var msgClass = 'alert-danger';
+        if (score >= 70) {
+            msgClass = 'alert-success';
+        } else if (score >= 50) {
+            msgClass = 'alert-warning';
+        }
+        $('#tg-correct-questions').text(correct + ' out of ' + total);
+        $('#tg-score').text(score);
+        $('#tg-msg').addClass(msgClass).show();
+    }
+    function resetQuestions(keep) {
+        $('li.question-row').removeClass('text-danger').removeClass('text-warning');
+        $('i.text-correct').html('');
+        $('#tg-msg').removeClass('alert-danger').removeClass('alert-success').removeClass('alert-warning').hide();
+        if(keep === true) {
+            return;
+        }
+        $('li.question-row').find('input[type="text"]').val('');
+        $('li.question-row').find('input[type="radio"],input[type="checkbox"]').prop('checked', false);
+    }
+    $('#check-questions').on('click', checkQuestion);
+    $('#reset-questions').on('click', resetQuestions);
+
+});</script>
+</div>
+</body>
+</html>

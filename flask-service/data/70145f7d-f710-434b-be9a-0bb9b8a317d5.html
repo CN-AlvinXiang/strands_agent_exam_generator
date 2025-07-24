@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <meta charset="utf-8">
+    <style>
+        body {
+            font-family: sans-serif;
+        }
+        code, pre {
+            font-family: monospace;
+        }
+        h1 code,
+        h2 code,
+        h3 code,
+        h4 code,
+        h5 code,
+        h6 code {
+            font-size: inherit;
+        }
+        ul li {
+            list-style-type: none;
+        }
+        table {
+        @extend .table;
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+            integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+            crossorigin="anonymous"></script>
+</head>
+<body>
+<div class="container">
+    <div class="form-row">
+        <div class="container">
+            <div class="question-container"><h2>单选题</h2>
+<p>3 + 2 - 1 = ?</p>
+<ul class="radio-list">
+<li><label><input type="radio" data-content="1" /> 4</label></li>
+<li><label><input type="radio" data-content="0" /> 5</label></li>
+<li><label><input type="radio" data-content="0" /> 3</label></li>
+<li><label><input type="radio" data-content="0" /> 2</label></li>
+</ul></div>
+<div class="question-container"><h2>单选题</h2>
+<p>5减去2等于多少？</p>
+<ul class="radio-list">
+<li><label><input type="radio" data-content="1" /> 3</label></li>
+<li><label><input type="radio" data-content="0" /> 2</label></li>
+<li><label><input type="radio" data-content="0" /> 4</label></li>
+<li><label><input type="radio" data-content="0" /> 7</label></li>
+</ul></div>
+<div class="question-container"><h2>多选题</h2>
+<p>以下哪些算式的结果等于3？</p>
+<ul class="checklist">
+<li><label><input type="checkbox" data-content="1" /> 1 + 2</label></li>
+<li><label><input type="checkbox" data-content="0" /> 2 + 2</label></li>
+<li><label><input type="checkbox" data-content="1" /> 5 - 2</label></li>
+<li><label><input type="checkbox" data-content="1" /> 4 - 1</label></li>
+<li><label><input type="checkbox" data-content="0" /> 3 - 1</label></li>
+<li><label><input type="checkbox" data-content="1" /> 0 + 3</label></li>
+</ul></div>
+        </div>
+    </div>
+    <div id="tg-msg" class="alert" role="alert" style="display: none">
+        <span id="tg-correct-questions"></span> Correct! <br /><b>Rating: <span id="tg-score"></span>%</b>
+    </div>
+    <div class="row">
+        <button id="check-questions" class="btn btn-lg btn-success">Check</button>
+        <button id="reset-questions" class="btn btn-link">Reset All</button>
+    </div>
+    <script type="text/javascript">$(function(){
+    // 为每个题目容器添加question-row类
+    $('.question-container').addClass('question-row');
+    
+    // 为每个选项列表设置相应的类
+    $('ul.radio-list,ul.checklist,ul.textbox').each(function(i, el){
+        var questionClass = $(this).attr('class');
+        // 找到包含题目的div元素
+        var container = $(this).closest('.question-container');
+        if (container.length) {
+            container.addClass(questionClass);
+        } else {
+            // 如果找不到容器，则使用直接父元素
+            var parentLi = $(this).closest('li');
+            if (parentLi.length) {
+                parentLi.addClass('question-row').addClass(questionClass);
+            } else {
+                // 如果找不到li父元素，则使用直接父元素
+                $(this).parent().addClass('question-row').addClass(questionClass);
+            }
+        }
+        
+        if (questionClass=='radio-list') {
+            $(this).find('input[type="radio"]').attr('name', 'radio-question-' + i);
+        }
+    });
+
+    function checkQuestion() {
+        resetQuestions(true);
+        
+        // 添加调试信息，输出页面结构
+        console.log("页面结构:");
+        console.log("单选题列表:", $('ul.radio-list').length);
+        console.log("多选题列表:", $('ul.checklist').length);
+        console.log("填空题列表:", $('ul.textbox').length);
+        
+        // 尝试多种方式找到题目
+        var questions = [];
+        var total_questions = 0;
+        
+        // 方法1: 使用question-container类
+        var method1 = $('.question-container');
+        console.log("方法1找到题目数:", method1.length);
+        
+        // 方法2: 使用已有的question-row类
+        var method2 = $('.question-row');
+        console.log("方法2找到题目数:", method2.length);
+        
+        // 方法3: 直接查找包含选项的元素的父元素
+        $('ul.radio-list,ul.checklist,ul.textbox').each(function(i, el){
+            var questionClass = $(this).attr('class');
+            var container = $(this).closest('.question-container');
+            if (container.length) {
+                container.addClass('question-row').addClass(questionClass);
+            } else {
+                var parent = $(this).parent();
+                parent.addClass('question-row').addClass(questionClass);
+            }
+            console.log("为元素添加question-row类:", $(this).parent().prop('tagName'), questionClass);
+        });
+        
+        var method3 = $('.question-row');
+        console.log("方法3找到题目数:", method3.length);
+        
+        // 方法4: 查找包含ul的p元素
+        $('p:has(ul)').addClass('question-row');
+        var method4 = $('p.question-row');
+        console.log("方法4找到题目数:", method4.length);
+        
+        // 方法5: 直接使用ul元素
+        $('ul.radio-list,ul.checklist,ul.textbox').addClass('direct-question');
+        var method5 = $('.direct-question');
+        console.log("方法5找到题目数:", method5.length);
+        
+        // 使用所有方法找到的题目
+        questions = $('.question-container, .question-row, .direct-question');
+        total_questions = questions.length;
+        console.log("最终找到题目数:", total_questions);
+        
+        console.log("Found " + total_questions + " questions");
+        var correct = 0;
+
+        questions.each(function(i, el) {
+            var self = $(this);
+            console.log("处理题目:", i, self.prop('tagName'), self.attr('class'));
+            
+            // Single Question.
+            if (self.hasClass('radio-list') || self.find('ul.radio-list').length > 0) {
+                var radioList = self.hasClass('radio-list') ? self : self.find('ul.radio-list');
+                console.log("单选题:", radioList.find('input[type="radio"]').length, "个选项");
+                console.log("正确选项:", radioList.find('input[type="radio"][data-content="1"]').length, "个");
+                console.log("选中的正确选项:", radioList.find('input[type="radio"][data-content="1"]:checked').length, "个");
+                
+                if (radioList.find('input[type="radio"][data-content="1"]:checked').length == 1) {
+                    correct += 1;
+                    console.log("单选题正确");
+                } else {
+                    self.addClass('text-danger');
+                    console.log("单选题错误");
+                }
+            }
+            // Textbox Question.
+            if(self.hasClass('textbox') || self.find('ul.textbox').length > 0) {
+                var textboxContainer = self.hasClass('textbox') ? self : self.find('ul.textbox');
+                var textbox = textboxContainer.find('input[type="text"]');
+                console.log("填空题:", textbox.length, "个输入框");
+                
+                if (textbox.length > 0) {
+                    var correct_text = String(textbox.data("content") || "").trim();
+                    var user_input = String(textbox.val() || "").trim();
+                    console.log("填空题正确答案:", correct_text);
+                    console.log("填空题用户输入:", user_input);
+                    
+                    if(user_input.toLowerCase()==correct_text.toLowerCase()) {
+                        correct += 1;
+                        console.log("填空题正确");
+                    } else {
+                        self.addClass('text-danger');
+                        textboxContainer.find("i.text-correct").html(correct_text);
+                        console.log("填空题错误");
+                    }
+                }
+            }
+            // Multiple selection Questions.
+            if(self.hasClass('checklist') || self.find('ul.checklist').length > 0) {
+                var checklistContainer = self.hasClass('checklist') ? self : self.find('ul.checklist');
+                console.log("多选题:", checklistContainer.find('input[type="checkbox"]').length, "个选项");
+                
+                var total_corrects = checklistContainer.find('input[type="checkbox"][data-content="1"]').length;
+                var total_incorrects = checklistContainer.find('input[type="checkbox"][data-content="0"]').length;
+                var correct_selected = checklistContainer.find('input[type="checkbox"][data-content="1"]:checked').length;
+                var incorrect_selected = checklistContainer.find('input[type="checkbox"][data-content="0"]:checked').length;
+                
+                console.log("多选题正确选项总数:", total_corrects);
+                console.log("多选题错误选项总数:", total_incorrects);
+                console.log("多选题选中的正确选项:", correct_selected);
+                console.log("多选题选中的错误选项:", incorrect_selected);
+                
+                // 避免除以零
+                var correctRatio = total_corrects > 0 ? (correct_selected / total_corrects) : 0;
+                var incorrectRatio = total_incorrects > 0 ? (incorrect_selected / total_incorrects) : 0;
+                var qc = +(correctRatio - incorrectRatio).toFixed(2);
+                
+                if (qc < 0) {
+                    qc = 0;
+                }
+                correct += qc;
+                console.log("多选题得分:", qc);
+                
+                if (qc == 0) {
+                    self.addClass('text-danger');
+                    console.log("多选题完全错误");
+                } else if (qc > 0 && qc < 1) {
+                    self.addClass('text-warning');
+                    console.log("多选题部分正确");
+                } else {
+                    console.log("多选题完全正确");
+                }
+            }
+        });
+
+        showScore(correct, total_questions);
+    }
+
+    function showScore(correct, total) {
+        // 确保total大于0，避免NaN
+        var score = total > 0 ? (correct / total).toFixed(2) * 100 : 0;
+        var msgClass = 'alert-danger';
+        if (score >= 70) {
+            msgClass = 'alert-success';
+        } else if (score >= 50) {
+            msgClass = 'alert-warning';
+        }
+        $('#tg-correct-questions').text(correct + ' out of ' + total);
+        $('#tg-score').text(score);
+        $('#tg-msg').addClass(msgClass).show();
+    }
+    function resetQuestions(keep) {
+        $('li.question-row').removeClass('text-danger').removeClass('text-warning');
+        $('i.text-correct').html('');
+        $('#tg-msg').removeClass('alert-danger').removeClass('alert-success').removeClass('alert-warning').hide();
+        if(keep === true) {
+            return;
+        }
+        $('li.question-row').find('input[type="text"]').val('');
+        $('li.question-row').find('input[type="radio"],input[type="checkbox"]').prop('checked', false);
+    }
+    $('#check-questions').on('click', checkQuestion);
+    $('#reset-questions').on('click', resetQuestions);
+
+});</script>
+</div>
+</body>
+</html>
