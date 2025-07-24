@@ -2,28 +2,7 @@
 
 这是一个基于Strands Agent框架的AI考试生成器，可以根据用户指定的参数生成各种类型的考试题目。
 
-<img width="342" height="271" alt="图片 1" src="https://github.com/user-attachments/assets/25105cdd-1f0e-4744-9015-8362fe301864" />
-
-
-<img width="429" height="343" alt="图片 2" src="https://github.com/user-attachments/assets/4d05cf85-3132-4c2c-b5bf-cc3d474b003f" />
-
-
-
-<img width="376" height="173" alt="图片 3" src="https://github.com/user-attachments/assets/8f094c6a-cad7-47a1-be35-defdc3e91ccb" />
-
-
-
-<img width="428" height="173" alt="图片 4" src="https://github.com/user-attachments/assets/8c99150f-80f2-4140-8c70-f2c4ed0e9e99" />
-
-
-
-<img width="376" height="203" alt="图片 5" src="https://github.com/user-attachments/assets/97b117fd-3c25-4a3e-8e67-da4f7427f2af" />
-
-
-
-<img width="870" height="477" alt="截屏2025-07-24 12 31 14" src="https://github.com/user-attachments/assets/3f9605e9-9ee2-407a-a523-71fed1b740b0" />
-
-
+<img width="1254" height="691" alt="截屏2025-07-24 12 33 41" src="https://github.com/user-attachments/assets/b5c92859-d51a-45e9-9537-21e80cffb5d3" />
 
 
 ## 功能特点
@@ -37,6 +16,9 @@
 - 支持并行生成题目：多个题目同时生成，提高效率
 - 支持题目缓存：避免重复生成相似的题目
 - 支持格式自动修复：自动修复格式问题，确保生成的考试内容格式正确
+
+
+
 
 ## 系统架构
 
