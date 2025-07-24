@@ -471,16 +471,14 @@ TaskManager与主流程的集成如下图所示：
 生成的数据，会使用QuickSight进行可视化展示：
 
 
-
-<img width="376" height="203" alt="图片 5" src="https://github.com/user-attachments/assets/5b784eff-37c0-47bd-8dc7-7fea6c75aabc" />
-
+<img width="630" height="423" alt="截屏2025-07-24 12 44 38" src="https://github.com/user-attachments/assets/aad3f254-85be-4813-a6d0-2019e7a582e0" />
 
 
-<img width="428" height="173" alt="图片 4" src="https://github.com/user-attachments/assets/96cfb11f-ea0d-42c7-b666-f8051f51ae6c" />
+<img width="637" height="421" alt="截屏2025-07-24 12 44 25" src="https://github.com/user-attachments/assets/dcd63c33-1407-4352-b0c2-9b7197fef5de" />
 
 
+<img width="610" height="421" alt="截屏2025-07-24 12 44 16" src="https://github.com/user-attachments/assets/6df11ce9-59ca-460e-95db-d10a1ec9fb04" />
 
-<img width="376" height="173" alt="图片 3" src="https://github.com/user-attachments/assets/ef061cee-f1fa-49ef-9af3-ec58ff4ef0c1" />
 
 
 
