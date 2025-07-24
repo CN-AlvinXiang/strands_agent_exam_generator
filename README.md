@@ -2,6 +2,9 @@
 
 这是一个基于Strands Agent框架的AI考试生成器，可以根据用户指定的参数生成各种类型的考试题目。
 
+
+
+
 <img width="1254" height="691" alt="截屏2025-07-24 12 33 41" src="https://github.com/user-attachments/assets/b5c92859-d51a-45e9-9537-21e80cffb5d3" />
 
 
