@@ -17,6 +17,9 @@
 - 支持题目缓存：避免重复生成相似的题目
 - 支持格式自动修复：自动修复格式问题，确保生成的考试内容格式正确
 
+
+
+
 <img width="1249" height="690" alt="截屏2025-07-24 12 36 36" src="https://github.com/user-attachments/assets/b2d1fde1-8914-4396-a592-1b1f3718ec94" />
 
 
@@ -454,8 +457,12 @@ TaskManager与主流程的集成如下图所示：
 
 5. **性能指标**：
    - 平均工具执行时间
+  
+   
 
 评估报告可以通过API获取：`GET /evaluation/report?workflow_id=xxx`
+
+
 
 <img width="870" height="477" alt="截屏2025-07-24 12 31 14" src="https://github.com/user-attachments/assets/396bf0d1-7bf8-4c2d-8bf1-0df6f68cff7e" />
 
@@ -463,10 +470,14 @@ TaskManager与主流程的集成如下图所示：
 
 生成的数据，会使用QuickSight进行可视化展示：
 
+
+
 <img width="376" height="203" alt="图片 5" src="https://github.com/user-attachments/assets/5b784eff-37c0-47bd-8dc7-7fea6c75aabc" />
 
 
+
 <img width="428" height="173" alt="图片 4" src="https://github.com/user-attachments/assets/96cfb11f-ea0d-42c7-b666-f8051f51ae6c" />
+
 
 
 <img width="376" height="173" alt="图片 3" src="https://github.com/user-attachments/assets/ef061cee-f1fa-49ef-9af3-ec58ff4ef0c1" />
