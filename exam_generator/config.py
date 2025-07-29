@@ -1,4 +1,6 @@
 import os
+import configparser
+from pathlib import Path
 from dataclasses import dataclass
 
 @dataclass
@@ -13,14 +15,73 @@ class LLMConfig:
 class AWSConfig:
     """AWS配置"""
     profile_name: str = "default"  # AWS配置文件名称
-    access_key: str = "*"  # AWS访问密钥ID
-    secret_key: str = "*"  # AWS秘密访问密钥
+    access_key: str = ""  # AWS访问密钥ID
+    secret_key: str = ""  # AWS秘密访问密钥
+    region: str = ""  # AWS区域
+    
+    def __post_init__(self):
+        """初始化后自动加载AWS凭证"""
+        self.load_aws_credentials()
+    
+    def load_aws_credentials(self):
+        """从AWS配置文件加载凭证"""
+        try:
+            # 首先尝试从环境变量获取
+            if os.environ.get("AWS_ACCESS_KEY_ID") and os.environ.get("AWS_SECRET_ACCESS_KEY"):
+                self.access_key = os.environ.get("AWS_ACCESS_KEY_ID")
+                self.secret_key = os.environ.get("AWS_SECRET_ACCESS_KEY")
+                self.region = os.environ.get("AWS_DEFAULT_REGION", "us-east-1")
+                print(f"✓ 从环境变量加载AWS凭证")
+                return
+            
+            # 尝试从AWS配置文件加载
+            aws_config_path = Path.home() / ".aws" / "credentials"
+            aws_config_config_path = Path.home() / ".aws" / "config"
+            
+            if aws_config_path.exists():
+                config = configparser.ConfigParser()
+                config.read(aws_config_path)
+                
+                if self.profile_name in config:
+                    profile = config[self.profile_name]
+                    self.access_key = profile.get("aws_access_key_id", "")
+                    self.secret_key = profile.get("aws_secret_access_key", "")
+                    print(f"✓ 从AWS凭证文件加载配置 (profile: {self.profile_name})")
+                else:
+                    print(f"⚠️  AWS凭证文件中未找到profile: {self.profile_name}")
+            
+            # 尝试从AWS config文件加载区域
+            if aws_config_config_path.exists():
+                config = configparser.ConfigParser()
+                config.read(aws_config_config_path)
+                
+                profile_section = f"profile {self.profile_name}" if self.profile_name != "default" else "default"
+                if profile_section in config:
+                    self.region = config[profile_section].get("region", "us-east-1")
+                    print(f"✓ 从AWS配置文件加载区域: {self.region}")
+            
+            if not self.region:
+                self.region = "us-east-1"  # 默认区域
+                
+        except Exception as e:
+            print(f"⚠️  加载AWS配置时出错: {str(e)}")
     
     def setup_credentials(self):
-        """设置AWS凭证"""
-        # 使用环境变量设置凭证
+        """设置AWS凭证到环境变量"""
+        if not self.access_key or not self.secret_key:
+            raise ValueError(
+                "AWS凭证未配置。请确保:\n"
+                "1. 运行 'aws configure' 配置AWS凭证，或\n"
+                "2. 设置环境变量 AWS_ACCESS_KEY_ID 和 AWS_SECRET_ACCESS_KEY，或\n"
+                "3. 在config.py中直接配置凭证"
+            )
+        
+        # 设置环境变量
         os.environ["AWS_ACCESS_KEY_ID"] = self.access_key
         os.environ["AWS_SECRET_ACCESS_KEY"] = self.secret_key
+        os.environ["AWS_DEFAULT_REGION"] = self.region
+        
+        print(f"✓ AWS凭证已设置到环境变量 (region: {self.region})")
 
 @dataclass
 class ServerConfig:
@@ -28,7 +89,7 @@ class ServerConfig:
     host: str = "0.0.0.0"
     port: int = 5001
     debug: bool = False
-    flask_service_url: str = "http://*:5006/upload_markdown"
+    flask_service_url: str = "http://localhost:5006/upload_markdown"
 
 @dataclass
 class LogConfig:
@@ -100,8 +161,12 @@ class ExamConfig:
     """
 
 # 创建配置实例
+aws_config = AWSConfig()  # 先创建AWS配置
 llm_config = LLMConfig()
-aws_config = AWSConfig()
+# 如果AWS配置中有区域信息，使用它
+if aws_config.region:
+    llm_config.region_name = aws_config.region
+
 server_config = ServerConfig()
 log_config = LogConfig()
 exam_config = ExamConfig()

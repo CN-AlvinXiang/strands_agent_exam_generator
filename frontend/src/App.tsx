@@ -14,7 +14,7 @@ const AppContent: React.FC = () => {
   const [examResult, setExamResult] = useState<string | null>(null);
   const [examLink, setExamLink] = useState<string | null>(null);
   const [apiKey, setApiKey] = useState<string>('');
-  const [apiEndpoint, setApiEndpoint] = useState<string>('http://*:5001');
+  const [apiEndpoint, setApiEndpoint] = useState<string>('http://localhost:5001');
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -98,7 +98,7 @@ const AppContent: React.FC = () => {
 
     try {
       // 使用本地服务作为默认端点
-      const endpoint = apiEndpoint || 'http://*:5001';
+      const endpoint = apiEndpoint || 'http://localhost:5001';
       const response = await fetch(endpoint+'/workflows/run', {
         method: 'POST',
         headers: {
