@@ -150,17 +150,17 @@ if [ "$START_FRONTEND" = true ]; then
     elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
         # Linux
         if command -v gnome-terminal &> /dev/null; then
-            gnome-terminal -- bash -c "cd '$(pwd)/frontend' && npm run dev; exec bash"
+            gnome-terminal -- bash -c "cd '$(pwd)/frontend' && npm run dev -- --host 0.0.0.0; exec bash"
         elif command -v xterm &> /dev/null; then
-            xterm -e "cd '$(pwd)/frontend' && npm run dev" &
+            xterm -e "cd '$(pwd)/frontend' && npm run dev -- --host 0.0.0.0" &
         else
             echo "无法打开新终端窗口，请在另一个终端中运行:"
-            echo "cd '$(pwd)/frontend' && npm run dev"
+            echo "cd '$(pwd)/frontend' && npm run dev -- --host 0.0.0.0"
         fi
     else
         # 其他系统
         echo "无法自动启动前端，请在另一个终端中运行:"
-        echo "cd '$(pwd)/frontend' && npm run dev"
+        echo "cd '$(pwd)/frontend' && npm run dev -- --host 0.0.0.0"
     fi
     
     echo "前端服务启动中..."
