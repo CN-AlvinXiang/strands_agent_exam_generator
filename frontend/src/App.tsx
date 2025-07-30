@@ -98,7 +98,7 @@ const AppContent: React.FC = () => {
 
     try {
       // 使用本地服务作为默认端点
-      const endpoint = apiEndpoint || 'http://localhost:5001';
+      const endpoint = apiEndpoint || 'http://127.0.0.1:5001';
       const response = await fetch(endpoint+'/workflows/run', {
         method: 'POST',
         headers: {
