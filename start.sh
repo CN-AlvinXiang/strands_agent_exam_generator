@@ -141,7 +141,7 @@ if [ "$START_FRONTEND" = true ]; then
     if [[ "$OSTYPE" == "darwin"* ]]; then
         # macOS - 直接在后台运行前端服务
         cd frontend
-        nohup npm run dev > frontend.log 2>&1 &
+        nohup npm run dev -- --host 0.0.0.0 > frontend.log 2>&1 &
         FRONTEND_PID=$!
         echo $FRONTEND_PID > frontend.pid
         cd ..
